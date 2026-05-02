@@ -35,3 +35,18 @@ CMakeLists.txt       Build definition.
 The split between `portbridge_core` and the `portbridge` executable is deliberate:
 most logic should live in the library so tests can exercise it without shelling
 out to a process.
+
+## Protocol Layer
+
+The first internal protocol primitive is a tunnel frame:
+
+```text
+type       1 byte
+stream_id  4 bytes, unsigned, big-endian
+length     4 bytes, unsigned, big-endian
+payload    N bytes
+```
+
+TCP gives us a byte stream, not message boundaries. Because of that,
+`decode_frame` can return `need_more` when only part of a frame has arrived.
+Callers keep the unread bytes, append more socket data later, and retry.

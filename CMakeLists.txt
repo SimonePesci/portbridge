@@ -13,6 +13,7 @@ option(PORTBRIDGE_BUILD_TESTS "Build PortBridge tests" ON)
 
 add_library(portbridge_core
   src/cli.cpp
+  src/protocol/frame.cpp
 )
 add_library(portbridge::core ALIAS portbridge_core)
 
@@ -35,5 +36,11 @@ if(PORTBRIDGE_BUILD_TESTS)
   )
   target_link_libraries(portbridge_cli_tests PRIVATE portbridge::core)
 
+  add_executable(portbridge_frame_tests
+    tests/frame_tests.cpp
+  )
+  target_link_libraries(portbridge_frame_tests PRIVATE portbridge::core)
+
   add_test(NAME portbridge_cli_tests COMMAND portbridge_cli_tests)
+  add_test(NAME portbridge_frame_tests COMMAND portbridge_frame_tests)
 endif()
