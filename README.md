@@ -50,3 +50,7 @@ payload    N bytes
 TCP gives us a byte stream, not message boundaries. Because of that,
 `decode_frame` can return `need_more` when only part of a frame has arrived.
 Callers keep the unread bytes, append more socket data later, and retry.
+
+For real socket reads, use `FrameDecoder`. It owns the buffered bytes across
+multiple reads and returns one complete frame at a time. This keeps future
+networking code focused on I/O while the protocol module owns framing.
